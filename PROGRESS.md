@@ -1,9 +1,11 @@
 # PROGRESS
 
-Shared session handoff for this project. Assistants read it at session start as instructed by `AGENTS.md`; Claude Code also loads it through a hook. Update it when requesting a handoff, or use `/wrapup` in Claude Code or `$wrapup` in Codex to update it and commit.
+Version: v0.0.0
+
+Session handoff for this project. Codex reads it at session start as instructed by `AGENTS.md`; the trusted startup hook also loads it into context. Use `$wrapup` to rewrite it, then `$bump-version` to bump the version, commit all changes, and tag the commit.
 (Fresh project — no session recorded yet.)
 
-## What we did
+## Since project start
 
 - —
 

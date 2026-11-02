@@ -1,11 +1,6 @@
----
-paths:
-  - "**/README.md"
-  - "docs/**/*.md"
----
 # Markdown documents
 
-These rules are for documents people read: the files matched by `paths` above. A long `##` section folds under its heading and a short one stays open, so a reader sees the title, the introduction and the headings, and opens only what they need. A folded section has exactly this shape:
+These rules apply to every `README.md` and all Markdown files under `docs/`. A long `##` section folds under its heading and a short one stays open, so a reader sees the title, the introduction and the headings, and opens only what they need. A folded section has exactly this shape:
 
 ```
 ## Installation

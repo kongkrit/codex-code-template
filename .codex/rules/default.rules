@@ -1,4 +1,4 @@
-# Mirrors the Bash allowlist in .claude/settings.json.
+# Project command allowlist for Codex.
 # Matching commands may run outside the sandbox without prompting.
 prefix_rule(pattern = ["sudo", "apt", "install"], decision = "allow")
 prefix_rule(pattern = ["sudo", "apt", "update"], decision = "allow")

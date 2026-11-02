@@ -6,3 +6,11 @@ model_reasoning_effort = "xhigh"
 
 [sandbox_workspace_write]
 writable_roots = ["/tmp"]
+
+[[hooks.SessionStart]]
+matcher = "^startup$"
+
+[[hooks.SessionStart.hooks]]
+type = "command"
+command = 'cat "$(git rev-parse --show-toplevel)/PROGRESS.md" 2>/dev/null || true'
+command_windows = 'powershell -NoProfile -Command "Get-Content -LiteralPath (Join-Path (git rev-parse --show-toplevel) PROGRESS.md) -Raw -Encoding UTF8 -ErrorAction SilentlyContinue"'

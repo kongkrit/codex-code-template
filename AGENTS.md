@@ -1,10 +1,10 @@
 # AGENTS.md
 
-Shared guidance for AI coding assistants working in this repository.
+Project instructions for Codex working in this repository.
 
 ## What this is
 
-An **AI-assisted coding template** — a starting point for new projects, not an application. It holds shared instructions and optional assistant-specific configuration; application code gets added alongside them.
+A **Codex coding template** — a starting point for new projects, not an application. It holds project instructions and optional Codex configuration; application code gets added alongside them.
 
 ## Code principles
 
@@ -43,22 +43,19 @@ Goal: as simple as possible, without saying anything false.
 
 ## Layout
 
-- `AGENTS.md` — shared project instructions. Keep assistant-independent guidance here.
-- `CLAUDE.md` — imports `AGENTS.md` for Claude Code compatibility.
-- `docs/markdown.md` — how to write README.md and docs/: which `##` sections fold, and how. Before editing any README.md or Markdown file under docs/, read and follow it.
-- `PROGRESS.md` — latest session handoff only; earlier ones: `git log -p -- PROGRESS.md`. See the session workflow below.
-- `.codex/config.toml` — optional Codex workspace permissions, `/tmp` access, and reasoning effort.
-- `.codex/rules/default.rules` — Codex command allowlist matching the shell permissions in `.claude/settings.json`. Project config and rules load only for trusted projects; restart Codex after changing rules. Managed policy still applies.
-- `.agents/skills/wrapup/SKILL.md` — Codex's `$wrapup` shortcut for a session handoff and commit.
-- `.claude/settings.json` — optional Claude Code settings, permissions, and a `SessionStart` hook that prints `PROGRESS.md` into context. Personal overrides go in the gitignored `.claude/settings.local.json`, never here.
-- `.claude/commands/wrapup.md` — Claude Code's `/wrapup` shortcut for a session handoff and commit.
-- `.claude/rules/markdown.md` — symlink to `docs/markdown.md`, so Claude Code loads it automatically when it reads a file matching the rule's `paths`.
+- `AGENTS.md` — project instructions, read automatically by Codex.
+- `docs/markdown.md` — how to write README.md and docs/: which `##` sections fold, and how. Before creating or editing any README.md or Markdown file under docs/, read and follow it.
+- `PROGRESS.md` — current version and handoff for changes since the latest tag. Tags and git history hold earlier versions. See the session workflow below.
+- `.codex/config.toml` — optional Codex workspace permissions, `/tmp` access, reasoning effort, and a `SessionStart` hook that loads `PROGRESS.md`. Review and trust the hook with `/hooks` before it can run.
+- `.codex/rules/default.rules` — command allowlist for Codex. Project config and rules load only for trusted projects; restart Codex after changing rules. Managed policy still applies.
+- `.agents/skills/wrapup/SKILL.md` — Codex's `$wrapup` shortcut for a session handoff; never stages or commits.
+- `.agents/skills/bump-version/SKILL.md` — Codex's `$bump-version [version]` shortcut to bump the version, commit all changes, and add a lightweight tag.
 - `.gitignore`, `.gitattributes` — ignore rules; LF line endings and binary file types.
 - `README.md` — human-facing overview.
 
 ## Conventions
 
-- **NEVER `git commit` or `git push` on your own.** Do either only when the user's current message asks for it. Exception: an explicitly invoked `/wrapup` (Claude Code) or `$wrapup` (Codex) requests a handoff and a commit, never a push.
+- **NEVER `git commit`, create a tag, or `git push` on your own.** Do these only when the user's current message asks for them. An explicit `$bump-version` invocation authorizes staging, a commit, and a tag, never a push. `$wrapup` never stages or commits.
 - Line endings follow `.gitattributes`: LF by default, CRLF only for the Windows script types it lists.
 - New languages or toolchains extend `.gitignore` and `.gitattributes` — no parallel ignore files. Keep new entries consistent with existing ones.
 - **Read first, edit once, check once.** Before changing anything, list every file the change touches and read them in one pass. Then make all the edits, then run whatever verifies them once. Don't loop read, edit, rerun per file. If a check fails, fix it and rerun that check.
@@ -67,14 +64,8 @@ Goal: as simple as possible, without saying anything false.
 ## Session workflow
 
 - At session start, read `PROGRESS.md` if it has not already been loaded. Check the current repository state before relying on the handoff.
-- When asked for a session handoff, rewrite `PROGRESS.md` as a handoff for the work since the previous handoff, not a running history:
-  1. Base: `git log -1 --format=%h -- PROGRESS.md`, the commit that wrote the previous handoff. Cover `git log <base>..HEAD`, uncommitted changes (`git status`, `git diff HEAD`), and decisions or findings from this session that left no commit.
-  2. Keep the title; the intro line names the base ("Covers the work after `<base>`; earlier handoffs: `git log -p -- PROGRESS.md`.").
-     - What we did: only the work from step 1. Replace the previous list, never append to it.
-     - Current state: a snapshot as of now (tests, branch and push state, what is verified and what is not).
-     - Next steps, Open questions: carry over what is still open, drop what is done or answered, add new items.
-  3. Once the handoff is committed, that commit becomes the next handoff's base.
-- Claude Code's `/wrapup` command and Codex's `$wrapup` skill request a handoff and a commit. With another assistant, ask to update `PROGRESS.md` and commit for the same workflow. A handoff alone does not authorize a commit.
+- For a session handoff, follow `.agents/skills/wrapup/SKILL.md`. Rewrite `PROGRESS.md` from scratch with changes since the latest tag, preserving its version. Never stage or commit as part of a handoff.
+- For a release, run `$wrapup` first, then follow `.agents/skills/bump-version/SKILL.md`. `$bump-version` increments the patch version by default; `$bump-version 1.2.3` selects an explicit version. It commits all changes and tags the commit, without pushing.
 
 ## Development environment
 

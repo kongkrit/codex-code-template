@@ -62,9 +62,6 @@ out/
 *.swp
 *.swo
 
-# Claude Code: track project settings.json; keep personal local settings untracked
-.claude/settings.local.json
-
 # Output artefacts (keep sources, ignore generated)
 output/
 exports/
